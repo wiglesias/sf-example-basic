@@ -24,10 +24,14 @@ class ParamController
 	}
 
 	#[Route('/attributes/{name}/{email}', name: 'get-from-attributes', methods: ['GET'])]
-	public function getFromAttributes(Request $request): Response
+	public function getFromAttributes(string $name, string $email): Response
 	{
-		$name = $request->attributes->get('name');
-		$email = $request->attributes->get('email');
+		// Normal approach
+//		$name = $request->attributes->get('name');
+//		$email = $request->attributes->get('email');
+
+		// Recommended approach
+		// public function getFromAttributes(string $name, string $email): Response
 
 		return new JsonResponse([
 			'name' => $name,
