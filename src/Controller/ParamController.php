@@ -20,9 +20,12 @@ class ParamController extends AbstractController
 		$name = $request->query->get('name');
 		$email = $request->query->get('email');
 
+		$items = ['un', 'dos', 'tres', 'quatre', 'cinc'];
+
 		return $this->render('param/params.html.twig', [
 			'name' => $name,
-			'email' => $email
+			'email' => $email,
+			'items' => $items
 		]);
 //		return new JsonResponse([
 //			'name' => $name,
