@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 class Category
@@ -16,7 +17,14 @@ class Category
     #[ORM\Column(type: 'string', columnDefinition: 'CHAR(36) NOT NULL')]
     private string $id;
 
-    #[ORM\Column(length: 100)]
+	#[Assert\NotBlank]
+	#[Assert\Length(
+		min: 2,
+		max: 100,
+		minMessage: 'Product name has to be at least {{ limit }} characters',
+		maxMessage: 'Product name has to be maximum {{ limit }} characters'
+	)]
+	#[ORM\Column(length: 100)]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
