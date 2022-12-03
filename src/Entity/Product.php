@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ProductRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[ORM\Index(columns: ['sku'], name: 'IDX_product_sku')]
@@ -12,9 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
 class Product
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
     #[ORM\Column(type: 'string', columnDefinition: 'CHAR(36) NOT NULL')]
-    private ?int $id = null;
+    private ?string $id;
 
     #[ORM\Column(type: 'string' ,length: 100)]
     private ?string $name = null;
@@ -28,8 +28,14 @@ class Product
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createOn = null;
 
-    public function getId(): ?int
-    {
+	public function __construct()
+	{
+		$this->id = Uuid::v4()->toRfc4122();
+		$this->createOn = new \DateTime();
+	}
+
+	public function getId(): ?string
+	{
         return $this->id;
     }
 
