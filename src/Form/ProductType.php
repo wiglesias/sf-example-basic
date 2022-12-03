@@ -15,7 +15,6 @@ class ProductType extends AbstractType
             ->add('name')
             ->add('sku')
             ->add('price')
-            ->add('createOn')
         ;
     }
 
