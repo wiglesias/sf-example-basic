@@ -21,7 +21,7 @@
             </tr>
             <tr>
                 <th>Price</th>
-                <td>{{ product.price }}</td>
+                <td>{{ (product.price / 100)|format_currency('EUR', locale='es') }}</td>
             </tr>
             <tr>
                 <th>CreateOn</th>

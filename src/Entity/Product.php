@@ -22,8 +22,8 @@ class Product
     #[ORM\Column(type: 'string' ,length: 50)]
     private ?string $sku = null;
 
-    #[ORM\Column(type: 'float', precision: 8, scale: 2)]
-    private ?float $price = null;
+    #[ORM\Column(type: 'integer')]
+    private ?int $price = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private \DateTimeInterface $createOn;
