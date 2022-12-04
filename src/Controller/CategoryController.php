@@ -3,14 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Event\CategoryCreated;
 use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 #[Route('/category')]
 class CategoryController extends AbstractController
@@ -27,7 +27,7 @@ class CategoryController extends AbstractController
     }
 
     #[Route('/new', name: 'app_category_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, CategoryRepository $categoryRepository, MailerInterface $mailer): Response
+    public function new(Request $request, CategoryRepository $categoryRepository, EventDispatcherInterface $dispatcher): Response
     {
         $category = new Category();
         $form = $this->createForm(CategoryType::class, $category);
@@ -36,22 +36,13 @@ class CategoryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $categoryRepository->save($category, true);
 
-			$email = (new Email())
-				->from('admin@sf-example.com')
-				->to('you@example.com')
-				//->cc('cc@example.com')
-				//->bcc('bcc@example.com')
-				//->replyTo('fabien@example.com')
-				//->priority(Email::PRIORITY_HIGH)
-				->subject('New category has been created!')
-				->text('New category has been created!')
-				->html($this->renderView('emails/new-category.html.twig', [
-					'id' => $category->getId(),
-					'name' => $category->getName(),
-					'created_on' => $category->getCreatedOn()->format('Y-m-d H:i:s'),
-				]));
-
-			$mailer->send($email);
+			$dispatcher->dispatch(
+				new CategoryCreated(
+					$category->getId(),
+					$category->getName(),
+					$category->getCreatedOn()->format('Y-m-d H:i:s')
+				)
+			);
 
             return $this->redirectToRoute('app_category_index', [], Response::HTTP_SEE_OTHER);
         }
