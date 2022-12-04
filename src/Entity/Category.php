@@ -7,10 +7,16 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * @author Wils Iglesias <wiglesias83@gmail.com>
+ */
+
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
+#[UniqueEntity(fields: ['slug'], message: 'category.slug_unique', errorPath: 'title')]
 class Category
 {
     #[ORM\Id]
@@ -26,6 +32,9 @@ class Category
 	)]
 	#[ORM\Column(length: 100)]
     private ?string $name = null;
+
+	#[ORM\Column(type: Types::STRING)]
+	private ?string $slug = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private \DateTimeInterface $createdOn;
@@ -56,6 +65,16 @@ class Category
 
         return $this;
     }
+
+	public function getSlug(): ?string
+	{
+		return $this->slug;
+	}
+
+	public function setSlug(string $slug): void
+	{
+		$this->slug = $slug;
+	}
 
     public function getCreatedOn(): ?\DateTimeInterface
     {

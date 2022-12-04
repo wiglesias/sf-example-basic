@@ -27,6 +27,9 @@ class Product
     #[ORM\Column(type: 'string' ,length: 100)]
     private ?string $name = null;
 
+	#[ORM\Column(type: Types::STRING)]
+	private ?string $slug = null;
+
 	#[Assert\NotBlank]
 	#[Assert\Length(
 		min: 2,
@@ -36,7 +39,6 @@ class Product
 	)]
 	#[ORM\Column(type: 'string' ,length: 50)]
     private ?string $sku = null;
-
 
 	#[Assert\NotBlank]
 	#[Assert\PositiveOrZero]
@@ -73,6 +75,16 @@ class Product
 
         return $this;
     }
+
+	public function getSlug(): ?string
+	{
+		return $this->slug;
+	}
+
+	public function setSlug(?string $slug): void
+	{
+		$this->slug = $slug;
+	}
 
     public function getSku(): ?string
     {
