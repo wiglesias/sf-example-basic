@@ -42,7 +42,11 @@ class CategoryController extends AbstractController
 				//->priority(Email::PRIORITY_HIGH)
 				->subject('New category has been created!')
 				->text('New category has been created!')
-				->html('<p>New category has been created!</p>');
+				->html($this->renderView('emails/new-category.html.twig', [
+					'id' => $category->getId(),
+					'name' => $category->getName(),
+					'created_on' => $category->getCreatedOn()->format('Y-m-d H:i:s'),
+				]));
 
 			$mailer->send($email);
 
