@@ -15,11 +15,14 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/category')]
 class CategoryController extends AbstractController
 {
-    #[Route('/', name: 'app_category_index', methods: ['GET'])]
-    public function index(CategoryRepository $categoryRepository): Response
+    #[Route('/', name: 'app_category_index', defaults: ['page' => '1'], methods: ['GET'])]
+	#[Route('/page/{page<[0-9]\d*>}', name: 'app_category_index_paginated', methods: ['GET'])]
+    public function index(CategoryRepository $categoryRepository, int $page): Response
     {
+		$latestCategories = $categoryRepository->findLatest($page);
+
         return $this->render('category/index.html.twig', [
-            'categories' => $categoryRepository->findAll(),
+            'paginator' => $latestCategories,
         ]);
     }
 

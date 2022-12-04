@@ -4,6 +4,7 @@
 
 {% block main %}
     <h1>Category index</h1>
+    <a href="{{ path('app_category_new') }}">Create new</a>
 
     <table class="table">
         <thead>
@@ -15,7 +16,7 @@
             </tr>
         </thead>
         <tbody>
-        {% for category in categories %}
+        {% for category in paginator.results %}
             <tr>
                 <td>{{ category.id }}</td>
                 <td>{{ category.name }}</td>
@@ -33,5 +34,30 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_category_new') }}">Create new</a>
+    {% if paginator.hasToPaginate %}
+        <div class="navigation text-center">
+            <ul class="pagination">
+                {% if paginator.hasPreviousPage %}
+                    <li class="page-item"><a class="page-link" href="{{ path('app_category_index_paginated', {page: paginator.previousPage}) }}" rel="previous"><i class="fa fw fa-long-arrow-left"></i> {{ 'Previous' }}</a></li>
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">{{ 'Previous' }}</span></li>
+                {% endif %}
+
+                {% for i in 1..paginator.lastPage %}
+                    {% if i == paginator.currentPage %}
+                        <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link" href="{{ path('app_category_index_paginated', {page: i}) }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if paginator.hasNextPage %}
+                    <li class="page-item"><a class="page-link" href="{{ path('app_category_index_paginated', {page: paginator.nextPage}) }}" rel="next">{{ 'Next' }} <i class="fa fw fa-arrow-right"></i></a></li>
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">{{ 'Next' }}</span></li>
+                {% endif %}
+            </ul>
+        </div>
+    {% endif %}
+
 {% endblock %}
