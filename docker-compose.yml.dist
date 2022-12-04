@@ -38,6 +38,15 @@ services:
       - sf-example-network
     command: [ 'mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci' ]
 
+  sf-example-mailer:
+    container_name: sf-example-mailer
+    image: schickling/mailcatcher
+    ports:
+      - '1025:1025'
+      - '1080:1080'
+    networks:
+      - sf-example-network
+
 networks:
   sf-example-network:
 

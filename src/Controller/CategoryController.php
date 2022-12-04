@@ -3,26 +3,31 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Event\CategoryCreated;
 use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 #[Route('/category')]
 class CategoryController extends AbstractController
 {
-    #[Route('/', name: 'app_category_index', methods: ['GET'])]
-    public function index(CategoryRepository $categoryRepository): Response
+    #[Route('/', name: 'app_category_index', defaults: ['page' => '1'], methods: ['GET'])]
+	#[Route('/page/{page<[0-9]\d*>}', name: 'app_category_index_paginated', methods: ['GET'])]
+    public function index(CategoryRepository $categoryRepository, int $page): Response
     {
+		$latestCategories = $categoryRepository->findLatest($page);
+
         return $this->render('category/index.html.twig', [
-            'categories' => $categoryRepository->findAll(),
+            'paginator' => $latestCategories,
         ]);
     }
 
     #[Route('/new', name: 'app_category_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, CategoryRepository $categoryRepository): Response
+    public function new(Request $request, CategoryRepository $categoryRepository, EventDispatcherInterface $dispatcher): Response
     {
         $category = new Category();
         $form = $this->createForm(CategoryType::class, $category);
@@ -30,6 +35,14 @@ class CategoryController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $categoryRepository->save($category, true);
+
+			$dispatcher->dispatch(
+				new CategoryCreated(
+					$category->getId(),
+					$category->getName(),
+					$category->getCreatedOn()->format('Y-m-d H:i:s')
+				)
+			);
 
             return $this->redirectToRoute('app_category_index', [], Response::HTTP_SEE_OTHER);
         }

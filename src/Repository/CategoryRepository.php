@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Category;
+use App\Pagination\Paginator;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -38,6 +39,15 @@ class CategoryRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
+	public function findLatest(int $page = 1): Paginator
+	{
+		$qb = $this->createQueryBuilder('c')
+			->orderBy('c.createdOn', 'DESC')
+		;
+
+		return (new Paginator($qb))->paginate($page);
+	}
 
 //    /**
 //     * @return Category[] Returns an array of Category objects
