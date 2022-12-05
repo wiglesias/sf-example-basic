@@ -45,9 +45,9 @@
         <div class="navigation text-center">
             <ul class="pagination">
                 {% if paginator.hasPreviousPage %}
-                    <li class="page-item"><a class="page-link" href="{{ path('app_product_index_paginated', {page: paginator.previousPage}) }}" rel="previous"><i class="fa fw fa-long-arrow-left"></i> {{ 'Previous' }}</a></li>
+                    <li class="page-item"><a class="page-link" href="{{ path('app_product_index_paginated', {page: paginator.previousPage}) }}" rel="previous"><i class="fa fw fa-long-arrow-left"></i> {{ 'paginator.previous'|trans }}</a></li>
                 {% else %}
-                    <li class="page-item disabled"><span class="page-link">{{ 'Previous' }}</span></li>
+                    <li class="page-item disabled"><span class="page-link">{{ 'paginator.previous'|trans }}</span></li>
                 {% endif %}
 
                 {% for i in 1..paginator.lastPage %}
@@ -59,9 +59,9 @@
                 {% endfor %}
 
                 {% if paginator.hasNextPage %}
-                    <li class="page-item"><a class="page-link" href="{{ path('app_product_index_paginated', {page: paginator.nextPage}) }}" rel="next">{{ 'Next' }} <i class="fa fw fa-arrow-right"></i></a></li>
+                    <li class="page-item"><a class="page-link" href="{{ path('app_product_index_paginated', {page: paginator.nextPage}) }}" rel="next">{{ 'paginator.next'|trans }} <i class="fa fw fa-arrow-right"></i></a></li>
                 {% else %}
-                    <li class="page-item disabled"><span class="page-link">{{ 'Next' }}</span></li>
+                    <li class="page-item disabled"><span class="page-link">{{ 'paginator.next'|trans }}</span></li>
                 {% endif %}
             </ul>
         </div>

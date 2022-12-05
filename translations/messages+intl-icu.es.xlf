@@ -14,6 +14,15 @@
                 <source>menu.item.categories</source>
                 <target>Categorías</target>
             </trans-unit>
+
+            <trans-unit id="paginator.previous">
+                <source>paginator.previous</source>
+                <target>Anterior</target>
+            </trans-unit>
+            <trans-unit id="paginator.next">
+                <source>paginator.next</source>
+                <target>Siguiente</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
